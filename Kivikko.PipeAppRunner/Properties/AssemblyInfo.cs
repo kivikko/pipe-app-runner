@@ -1,15 +1,14 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PipeAppRunner")]
+[assembly: AssemblyTitle("Kivikko.PipeAppRunner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PipeAppRunner")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyProduct("Kivikko.PipeAppRunner")]
+[assembly: AssemblyCopyright("Copyright © 2024 Sergei Petrov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
