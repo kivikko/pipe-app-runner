@@ -22,27 +22,27 @@ public class PipeServer : PipeBase
             OutputResponse(requestId, data);
     }
     
-    public new PipeServer AddEndpoint(string endpoint, Func<string> func)
+    public new PipeServer AddService(string endpoint, Func<string> func)
     {
-        base.AddEndpoint(endpoint, func);
+        base.AddService(endpoint, func);
         return this;
     }
     
-    public new PipeServer AddEndpoint(string endpoint, Func<Task<string>> func)
+    public new PipeServer AddService(string endpoint, Func<Task<string>> func)
     {
-        base.AddEndpoint(endpoint, func);
+        base.AddService(endpoint, func);
         return this;
     }
 
-    public new PipeServer AddEndpoint(string endpoint, Func<string, string> func)
+    public new PipeServer AddService(string endpoint, Func<string, string> func)
     {
-        base.AddEndpoint(endpoint, func);
+        base.AddService(endpoint, func);
         return this;
     }
 
-    public new PipeServer AddEndpoint(string endpoint, Func<string, Task<string>> func)
+    public new PipeServer AddService(string endpoint, Func<string, Task<string>> func)
     {
-        base.AddEndpoint(endpoint, func);
+        base.AddService(endpoint, func);
         return this;
     }
 }

@@ -4,6 +4,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kivikko.PipeAppRunner", "Ki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kivikko.PipeAppRunner.Tests", "Kivikko.PipeAppRunner.Tests\Kivikko.PipeAppRunner.Tests.csproj", "{B094F19D-379B-427D-8132-EA2739342EEE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{8BC63EDE-DFDC-4E14-91F6-2C4BB986C322}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kivikko.PipeAppRunner.Samples.WPF.Client", "Kivikko.PipeAppRunner.Samples.WPF.Client\Kivikko.PipeAppRunner.Samples.WPF.Client.csproj", "{A94DEAC1-775E-4481-B2BA-39BE1B734FCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kivikko.PipeAppRunner.Samples.WPF.Server", "Kivikko.PipeAppRunner.Samples.WPF.Server\Kivikko.PipeAppRunner.Samples.WPF.Server.csproj", "{A77F1999-5E33-4737-957E-461E70D6D198}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{70B6B9EF-89A6-4AC7-A519-14A1D5EB7403}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +26,18 @@ Global
 		{B094F19D-379B-427D-8132-EA2739342EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B094F19D-379B-427D-8132-EA2739342EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B094F19D-379B-427D-8132-EA2739342EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A94DEAC1-775E-4481-B2BA-39BE1B734FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A94DEAC1-775E-4481-B2BA-39BE1B734FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A94DEAC1-775E-4481-B2BA-39BE1B734FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A94DEAC1-775E-4481-B2BA-39BE1B734FCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A77F1999-5E33-4737-957E-461E70D6D198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A77F1999-5E33-4737-957E-461E70D6D198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A77F1999-5E33-4737-957E-461E70D6D198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A77F1999-5E33-4737-957E-461E70D6D198}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70B6B9EF-89A6-4AC7-A519-14A1D5EB7403} = {8BC63EDE-DFDC-4E14-91F6-2C4BB986C322}
+		{A94DEAC1-775E-4481-B2BA-39BE1B734FCA} = {70B6B9EF-89A6-4AC7-A519-14A1D5EB7403}
+		{A77F1999-5E33-4737-957E-461E70D6D198} = {70B6B9EF-89A6-4AC7-A519-14A1D5EB7403}
 	EndGlobalSection
 EndGlobal

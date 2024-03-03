@@ -1,0 +1,69 @@
+﻿<Window x:Class="Kivikko.PipeAppRunner.Samples.WPF.Server.ServerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:server="clr-namespace:Kivikko.PipeAppRunner.Samples.WPF.Server"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance server:ServerViewModel}"
+        Title="Server" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid
+        Margin="5">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel
+            Grid.Column="0">
+            <Button
+                Command="{Binding StartClientCommand}"
+                Content="Start Client"
+                Click="FocusMessageInputTextBox"/>
+            <CheckBox
+                IsChecked="{Binding ClientOnTop}"
+                Content="New client on top"/>
+        </StackPanel>
+        
+        <Grid
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBox
+                Grid.Row="0"
+                Text="{Binding Chat}"
+                TextWrapping="Wrap"
+                IsReadOnly="True"
+                VerticalContentAlignment="Bottom"
+                GotFocus="FocusMessageInputTextBox"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            
+            <Grid
+                Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    Grid.Column="0"
+                    x:Name="MessageInputTextBox"
+                    Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"
+                    KeyDown="UIElement_OnKeyDown" />
+
+                <Button
+                    Grid.Column="1"
+                    Command="{Binding SendCommand}"
+                    Content="Send"
+                    Click="FocusMessageInputTextBox"/>
+                
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

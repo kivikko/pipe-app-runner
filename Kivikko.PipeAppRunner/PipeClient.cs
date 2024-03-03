@@ -15,7 +15,7 @@ public class PipeClient : PipeBase
         return pipeClient;
     }
     
-    public PipeClient(string pipeName) :
+    private PipeClient(string pipeName) :
         base(pipeInName: $"{pipeName}-1", pipeOutName: $"{pipeName}-0") =>
         Name = pipeName;
 

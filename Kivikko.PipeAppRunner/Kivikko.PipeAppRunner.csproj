@@ -42,6 +42,7 @@
     <ItemGroup>
         <Compile Include="PipeAppClientOptions.cs" />
         <Compile Include="PipeAppRunner.cs" />
+        <Compile Include="PipeAppRunnerActions.cs" />
         <Compile Include="PipeAppRunnerOptions.cs" />
         <Compile Include="PipeBase.cs" />
         <Compile Include="PipeClient.cs" />
@@ -55,7 +56,7 @@
         <Compile Include="Usings.cs" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="Kivikko.Json" Version="1.0.8" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

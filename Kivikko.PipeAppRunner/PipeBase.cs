@@ -15,12 +15,12 @@ public abstract class PipeBase
     
     private readonly PipeIn  _pipeIn;
     private readonly PipeOut _pipeOut;
-    private readonly Dictionary<string, Action>                     _actionEndpoints = new();
-    private readonly Dictionary<string, Action<string>>             _parameterActionEndpoints = new();
-    private readonly Dictionary<string, Func<string>>               _funcEndpoints = new();
-    private readonly Dictionary<string, Func<Task<string>>>         _taskFuncEndpoints = new();
-    private readonly Dictionary<string, Func<string, string>>       _parameterEndpoints = new();
-    private readonly Dictionary<string, Func<string, Task<string>>> _taskParameterEndpoints = new();
+    private readonly Dictionary<string, Action>                     _actionServices = new();
+    private readonly Dictionary<string, Action<string>>             _parameterActionServices = new();
+    private readonly Dictionary<string, Func<string>>               _funcServices = new();
+    private readonly Dictionary<string, Func<Task<string>>>         _taskFuncServices = new();
+    private readonly Dictionary<string, Func<string, string>>       _parameterServices = new();
+    private readonly Dictionary<string, Func<string, Task<string>>> _taskParameterServices = new();
     private readonly Dictionary<int, Response>                      _responses = new();
     private bool _pipeInConnected;
     private bool _pipeOutConnected;
@@ -43,34 +43,34 @@ public abstract class PipeBase
     public string Name { get; protected set; }
     public bool IsConnected => _pipeInConnected && _pipeOutConnected;
     
-    public PipeBase AddEndpoint(string endpoint, Action action)
+    public PipeBase AddService(string endpoint, Action action)
     {
-        _actionEndpoints[endpoint] = action;
+        _actionServices[endpoint] = action;
         return this;
     }
-    public PipeBase AddEndpoint(string endpoint, Action<string> action)
+    public PipeBase AddService(string endpoint, Action<string> action)
     {
-        _parameterActionEndpoints[endpoint] = action;
+        _parameterActionServices[endpoint] = action;
         return this;
     }
-    public PipeBase AddEndpoint(string endpoint, Func<string> func)
+    public PipeBase AddService(string endpoint, Func<string> func)
     {
-        _funcEndpoints[endpoint] = func;
+        _funcServices[endpoint] = func;
         return this;
     }
-    public PipeBase AddEndpoint(string endpoint, Func<Task<string>> func)
+    public PipeBase AddService(string endpoint, Func<Task<string>> func)
     {
-        _taskFuncEndpoints[endpoint] = func;
+        _taskFuncServices[endpoint] = func;
         return this;
     }
-    public PipeBase AddEndpoint(string endpoint, Func<string, string> func)
+    public PipeBase AddService(string endpoint, Func<string, string> func)
     {
-        _parameterEndpoints[endpoint] = func;
+        _parameterServices[endpoint] = func;
         return this;
     }
-    public PipeBase AddEndpoint(string endpoint, Func<string, Task<string>> func)
+    public PipeBase AddService(string endpoint, Func<string, Task<string>> func)
     {
-        _taskParameterEndpoints[endpoint] = func;
+        _taskParameterServices[endpoint] = func;
         return this;
     }
     
@@ -137,44 +137,44 @@ public abstract class PipeBase
             {
                 if (!string.IsNullOrWhiteSpace(parameter))
                 {
-                    if (_parameterActionEndpoints.TryGetValue(endpoint, out var action))
+                    if (_parameterActionServices.TryGetValue(endpoint, out var action))
                     {
                         action(parameter);
                         await SendMessage($"{requestId}:{Status.Success}");
                     }
 
-                    else if (_parameterEndpoints.TryGetValue(endpoint, out var parameterResponseFunc))
+                    else if (_parameterServices.TryGetValue(endpoint, out var parameterResponseFunc))
                         await SendMessage($"{requestId}:{Status.Success}:{parameterResponseFunc.Invoke(parameter)}");
 
-                    else if (_taskParameterEndpoints.TryGetValue(endpoint, out var taskParameterResponseFunc))
+                    else if (_taskParameterServices.TryGetValue(endpoint, out var taskParameterResponseFunc))
                         await SendMessage($"{requestId}:{Status.Success}:{await taskParameterResponseFunc.Invoke(parameter)}");
 
-                    else if (_funcEndpoints.TryGetValue(endpoint, out var responseFunc))
+                    else if (_funcServices.TryGetValue(endpoint, out var responseFunc))
                         await SendMessage($"{requestId}:{Status.Success}:{responseFunc.Invoke()}");
 
-                    else if (_taskFuncEndpoints.TryGetValue(endpoint, out var taskResponseFunc))
+                    else if (_taskFuncServices.TryGetValue(endpoint, out var taskResponseFunc))
                         await SendMessage($"{requestId}:{Status.Success}:{await taskResponseFunc.Invoke()}");
 
                     else
                         await SendMessage($"{requestId}:{Status.BadRequest}:endpoint '{endpoint}' not found.");
                 }
                 
-                else if (_actionEndpoints.TryGetValue(endpoint, out var action))
+                else if (_actionServices.TryGetValue(endpoint, out var action))
                 {
                     action();
                     await SendMessage($"{requestId}:{Status.Success}");
                 }
                 
-                else if (_funcEndpoints.TryGetValue(endpoint, out var responseFunc))
+                else if (_funcServices.TryGetValue(endpoint, out var responseFunc))
                     await SendMessage($"{requestId}:{Status.Success}:{responseFunc.Invoke()}");
 
-                else if (_taskFuncEndpoints.TryGetValue(endpoint, out var taskResponseFunc))
+                else if (_taskFuncServices.TryGetValue(endpoint, out var taskResponseFunc))
                     await SendMessage($"{requestId}:{Status.Success}:{await taskResponseFunc.Invoke()}");
 
-                else if (_parameterEndpoints.TryGetValue(endpoint, out var parameterResponseFunc))
+                else if (_parameterServices.TryGetValue(endpoint, out var parameterResponseFunc))
                     await SendMessage($"{requestId}:{Status.Success}:{parameterResponseFunc.Invoke(null)}");
 
-                else if (_taskParameterEndpoints.TryGetValue(endpoint, out var taskParameterResponseFunc))
+                else if (_taskParameterServices.TryGetValue(endpoint, out var taskParameterResponseFunc))
                     await SendMessage($"{requestId}:{Status.Success}:{await taskParameterResponseFunc.Invoke(null)}");
 
                 else
@@ -248,7 +248,7 @@ public abstract class PipeBase
                         Status = response.StatusCode,
                         IsSuccess = true,
                         Content = typeof(T) != typeof(string)
-                            ? fromJson?.Invoke(response.Content) ?? JsonSerializer.Deserialize<T>(response.Content)
+                            ? fromJson?.Invoke(response.Content) ?? JsonUtils.FromJson<T>(response.Content)
                             : response.Content as T,
                     },
                     >= 400 => new TaskResult<T>
