@@ -3,7 +3,7 @@
 internal class PipeIn
 {
     private readonly string _pipeName;
-    private readonly NamedPipeServerStream _pipeServer;
+    private readonly NamedPipeServerStream _pipeServerStream;
     private bool _isStopping;
     private readonly object _lockingObject = new();
     private const int BufferSize = 2048;
@@ -11,7 +11,7 @@ internal class PipeIn
     internal PipeIn(string pipeName)
     {
         _pipeName = pipeName;
-        _pipeServer = new NamedPipeServerStream(
+        _pipeServerStream = new NamedPipeServerStream(
             pipeName,
             PipeDirection.In,
             1,
@@ -19,7 +19,7 @@ internal class PipeIn
             PipeOptions.Asynchronous);
     }
 
-    internal bool IsConnected => _pipeServer?.IsConnected ?? false;
+    internal bool IsConnected => _pipeServerStream?.IsConnected ?? false;
     
     internal event EventHandler Connected;
     internal event EventHandler Disconnected;
@@ -29,23 +29,23 @@ internal class PipeIn
     private void OnConnected() => Connected?.Invoke(this, EventArgs.Empty);
     private void OnDisconnected() => Disconnected?.Invoke(this, EventArgs.Empty);
     
-    internal void Start() => _pipeServer.BeginWaitForConnection(WaitForConnectionCallBack, null);
+    internal void Start() => _pipeServerStream.BeginWaitForConnection(WaitForConnectionCallBack, null);
 
     internal void Stop()
     {
         try
         {
-            if (!_pipeServer.IsConnected)
+            if (!_pipeServerStream.IsConnected)
                 return;
                 
             _isStopping = true;
-            _pipeServer.Disconnect();
+            _pipeServerStream.Disconnect();
             OnDisconnected();
         }
         finally
         {
-            _pipeServer.Close();
-            _pipeServer.Dispose();
+            _pipeServerStream.Close();
+            _pipeServerStream.Dispose();
             _isStopping = false;
         }
     }
@@ -58,7 +58,7 @@ internal class PipeIn
         {
             if (_isStopping) return;
                 
-            _pipeServer.EndWaitForConnection(result);
+            _pipeServerStream.EndWaitForConnection(result);
             OnConnected();
             BeginRead(new PipeMessage());
         }
@@ -66,19 +66,19 @@ internal class PipeIn
     
     private void BeginRead(PipeMessage pipeMessage)
     {
-        _pipeServer.BeginRead(pipeMessage.Buffer, 0, BufferSize, EndReadCallBack, pipeMessage);
+        _pipeServerStream.BeginRead(pipeMessage.Buffer, 0, BufferSize, EndReadCallBack, pipeMessage);
     }
     
     private void EndReadCallBack(IAsyncResult result)
     {
-        var readBytes = _pipeServer.EndRead(result);
+        var readBytes = _pipeServerStream.EndRead(result);
         
         if (readBytes > 0)
         {
             var info = (PipeMessage) result.AsyncState;
             info.StringBuilder.Append(Encoding.UTF8.GetString(info.Buffer, 0, readBytes));
 
-            if (!_pipeServer.IsMessageComplete)
+            if (!_pipeServerStream.IsMessageComplete)
             {
                 BeginRead(info);
             }

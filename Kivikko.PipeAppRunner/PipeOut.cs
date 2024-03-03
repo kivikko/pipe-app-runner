@@ -3,15 +3,15 @@
 internal class PipeOut
 {
     private readonly string _pipeName;
-    private readonly NamedPipeClientStream _pipeClient;
+    private readonly NamedPipeClientStream _pipeClientStream;
 
     internal PipeOut(string pipeName)
     {
         _pipeName = pipeName;
-        _pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.Out, PipeOptions.Asynchronous);
+        _pipeClientStream = new NamedPipeClientStream(".", pipeName, PipeDirection.Out, PipeOptions.Asynchronous);
     }
 
-    internal bool IsConnected => _pipeClient?.IsConnected ?? false;
+    internal bool IsConnected => _pipeClientStream?.IsConnected ?? false;
     
     internal event EventHandler Connected;
     internal event EventHandler Disconnected;
@@ -21,7 +21,7 @@ internal class PipeOut
     
     internal async void Start()
     {
-        await _pipeClient.ConnectAsync();
+        await _pipeClientStream.ConnectAsync();
         var handshakeMessage = await SendMessage(_pipeName);
         
         if (handshakeMessage.IsSuccess)
@@ -34,16 +34,16 @@ internal class PipeOut
     {
         try
         {
-            if (!_pipeClient.IsConnected)
+            if (!_pipeClientStream.IsConnected)
                 return;
             
-            _pipeClient.WaitForPipeDrain();
+            _pipeClientStream.WaitForPipeDrain();
             OnDisconnected();
         }
         finally
         {
-            _pipeClient.Close();
-            _pipeClient.Dispose();
+            _pipeClientStream.Close();
+            _pipeClientStream.Dispose();
         }
     }
     
@@ -53,7 +53,7 @@ internal class PipeOut
         
         try
         {
-            if (!_pipeClient.IsConnected || !IsConnected)
+            if (!_pipeClientStream.IsConnected || !IsConnected)
                 return new TaskResult
                 {
                     IsSuccess = false,
@@ -63,7 +63,7 @@ internal class PipeOut
 
             var buffer = Encoding.UTF8.GetBytes(message);
         
-            _pipeClient.BeginWrite(buffer, 0, buffer.Length, asyncResult =>
+            _pipeClientStream.BeginWrite(buffer, 0, buffer.Length, asyncResult =>
             {
                 try
                 {
@@ -96,8 +96,8 @@ internal class PipeOut
     {
         try
         {
-            _pipeClient.EndWrite(asyncResult);
-            _pipeClient.Flush();
+            _pipeClientStream.EndWrite(asyncResult);
+            _pipeClientStream.Flush();
             return new TaskResult
             {
                 IsSuccess = true,

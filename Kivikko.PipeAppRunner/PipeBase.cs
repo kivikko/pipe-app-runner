@@ -99,7 +99,7 @@ public abstract class PipeBase
         }
 
         if (_pipeInConnected && _pipeOutConnected)
-            Connected?.Invoke(sender, EventArgs.Empty);
+            Connected?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnDisconnected(object sender, EventArgs e)
@@ -111,7 +111,7 @@ public abstract class PipeBase
         }
         
         if (!_pipeInConnected && !_pipeOutConnected)
-            Disconnected?.Invoke(sender, EventArgs.Empty);
+            Disconnected?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnMessageReceived(object sender, string message)
@@ -288,4 +288,15 @@ public abstract class PipeBase
         public int StatusCode { get; }
         public string Content { get; }
     }
+    
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == this.GetType() && Equals((PipeBase)obj);
+    }
+    private bool Equals(PipeBase other) => Name == other.Name;
+    
+    // ReSharper disable NonReadonlyMemberInGetHashCode
+    public override int GetHashCode() => Name != null ? Name.GetHashCode() : 0;
 }

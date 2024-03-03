@@ -8,7 +8,6 @@ public class PipeServerDispatcher
         var pipeServer = PipeServer.Create();
         pipeServer.Connected    += PipeServerOnConnected;
         pipeServer.Disconnected += PipeServerOnDisconnected;
-        _pipeServers.Add(pipeServer);
         return pipeServer;
     }
 
